@@ -57,27 +57,51 @@ void free_singly_linked_list(SinglyLinkedListNode* node) {
     }
 }
 
-// Complete the compare_lists function below.
+// Complete the mergeLists function below.
 
 /*
- * For your reference:
- *
- * SinglyLinkedListNode {
- *     int data;
- *     SinglyLinkedListNode* next;
- * };
- *
- */
-bool compare_lists(SinglyLinkedListNode* head1, SinglyLinkedListNode* head2) {
-    SinglyLinkedListNode* iter1 = head1;
-    SinglyLinkedListNode* iter2 = head2;
-    while(iter1 != nullptr and iter2!= nullptr){
-        if(iter1->data != iter2->data)
-            return 0;
-        iter1 = iter1->next;
-        iter2 = iter2->next;
+* For your reference:
+*
+* SinglyLinkedListNode {
+*     int data;
+*     SinglyLinkedListNode* next;
+* };
+*
+*/
+SinglyLinkedListNode* mergeLists(SinglyLinkedListNode* head1, SinglyLinkedListNode* head2) {
+    if (head1 == nullptr) {
+        return head2;
     }
-    return iter1 == nullptr && iter2 == nullptr;
+    if (head2 == nullptr) {
+        return head1;
+    }
+
+    // Determine the head of the merged list
+    SinglyLinkedListNode* head = (head1->data < head2->data) ? head1 : head2;
+    SinglyLinkedListNode* current = head;
+
+    // Move to the next node in the selected list
+    (head == head1) ? (head1 = head1->next) : (head2 = head2->next);
+
+    // Iterate while both lists have elements
+    while (head1 != nullptr && head2 != nullptr) {
+        // Compare the values of the current nodes in both lists
+        if (head1->data < head2->data) {
+            current->next = head1;
+            head1 = head1->next;
+        } else {
+            current->next = head2;
+            head2 = head2->next;
+        }
+
+        // Move the current pointer to the last node in the merged list
+        current = current->next;
+    }
+
+    // If one list is not empty, append the remaining nodes to the merged list
+    current->next = (head1 != nullptr) ? head1 : head2;
+
+    return head;
 }
 
 int main()
@@ -117,9 +141,12 @@ int main()
             llist2->insert_node(llist2_item);
         }
 
-        bool result = compare_lists(llist1->head, llist2->head);
+        SinglyLinkedListNode* llist3 = mergeLists(llist1->head, llist2->head);
 
-        fout << result << "\n";
+        print_singly_linked_list(llist3, " ", fout);
+        fout << "\n";
+
+        free_singly_linked_list(llist3);
     }
 
     fout.close();

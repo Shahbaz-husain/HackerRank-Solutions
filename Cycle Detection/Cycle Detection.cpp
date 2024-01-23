@@ -57,7 +57,7 @@ void free_singly_linked_list(SinglyLinkedListNode* node) {
     }
 }
 
-// Complete the compare_lists function below.
+// Complete the has_cycle function below.
 
 /*
  * For your reference:
@@ -68,16 +68,19 @@ void free_singly_linked_list(SinglyLinkedListNode* node) {
  * };
  *
  */
-bool compare_lists(SinglyLinkedListNode* head1, SinglyLinkedListNode* head2) {
-    SinglyLinkedListNode* iter1 = head1;
-    SinglyLinkedListNode* iter2 = head2;
-    while(iter1 != nullptr and iter2!= nullptr){
-        if(iter1->data != iter2->data)
-            return 0;
-        iter1 = iter1->next;
-        iter2 = iter2->next;
+bool has_cycle(SinglyLinkedListNode* head) {
+    if(head == nullptr)
+        return false;
+    SinglyLinkedListNode* fast = head;
+    SinglyLinkedListNode* slow = head;
+    while(fast!= nullptr and fast->next != nullptr){
+        fast = fast->next->next;
+        slow = slow->next;
+        if(fast == slow)
+            return true;
+        
     }
-    return iter1 == nullptr && iter2 == nullptr;
+    return false;
 }
 
 int main()
@@ -89,35 +92,40 @@ int main()
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     for (int tests_itr = 0; tests_itr < tests; tests_itr++) {
-        SinglyLinkedList* llist1 = new SinglyLinkedList();
-
-        int llist1_count;
-        cin >> llist1_count;
+        int index;
+        cin >> index;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        for (int i = 0; i < llist1_count; i++) {
-            int llist1_item;
-            cin >> llist1_item;
+        SinglyLinkedList* llist = new SinglyLinkedList();
+
+        int llist_count;
+        cin >> llist_count;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        for (int i = 0; i < llist_count; i++) {
+            int llist_item;
+            cin >> llist_item;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-            llist1->insert_node(llist1_item);
+            llist->insert_node(llist_item);
         }
       
-      	SinglyLinkedList* llist2 = new SinglyLinkedList();
-
-        int llist2_count;
-        cin >> llist2_count;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-        for (int i = 0; i < llist2_count; i++) {
-            int llist2_item;
-            cin >> llist2_item;
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            llist2->insert_node(llist2_item);
+      	SinglyLinkedListNode* extra = new SinglyLinkedListNode(-1);
+      	SinglyLinkedListNode* temp = llist->head;
+      
+      	for (int i = 0; i < llist_count; i++) {
+            if (i == index) {
+          		extra = temp;
+            }
+          	
+          	if (i != llist_count-1) {
+          		temp = temp->next;
+            }
         }
+      
+      	temp->next = extra;
 
-        bool result = compare_lists(llist1->head, llist2->head);
+        bool result = has_cycle(llist->head);
 
         fout << result << "\n";
     }
