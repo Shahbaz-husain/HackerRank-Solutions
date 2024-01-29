@@ -423,3 +423,36 @@ Node<int>* insertion_iteration(Node<int>* root, int data){
 
     return root;
 }
+
+
+void decode_huff(Node<int> * root, string s) {
+    vector<char> v;
+    Node<int>* temp = root;
+    for(int i = 0; i < s.size(); ++i){
+        if(s[i] == '0')
+            temp = temp->left;
+        else
+            temp = temp->right;
+            
+        if(!temp->left and !temp->right){
+            v.push_back(temp->data);
+            temp = root;
+        }
+    }
+    
+    for(int i = 0; i < v.size(); ++i)
+        cout << v[i];
+}
+
+// function to check a binary search tree
+bool isBSTutil(Node<int>* root, int min, int max){
+    if(!root) return true;
+    
+    if(root->data < min or root->data > max) return false;
+    
+    return isBSTutil(root->left, min, root->data -1) and isBSTutil(root->right, root->data + 1, max);
+}
+    
+bool checkBST(Node<int>* root) {
+    return isBSTutil(root, 0, 100001);
+}
